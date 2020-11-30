@@ -4,6 +4,33 @@ import {Request, Response} from 'express';
 import * as zlib from 'zlib';
 import * as fs from 'fs';
 
+const JS_OPTION = {
+    status: 200, // optional
+    method: 'GET', // optional
+    request: {
+        accept: '*/*'
+    },
+    response: {
+        'content-type': 'application/javascript',
+        'content-encoding': 'gzip'
+    }
+}
+
+
+const CSS_OPTION = {
+    status: 200, // optional
+    method: 'GET', // optional
+    request: {
+        accept: '*/*'
+    },
+    response: {
+        'content-type': 'text/css',
+        'content-encoding': 'gzip'
+    }
+}
+
+
+
 @Controller()
 export class AppController {
     constructor(private readonly appService: AppService) {
@@ -27,22 +54,18 @@ export class AppController {
         // res.end('<script src="/main.js"></script>')
 
 
-        var options = {
-            status: 200, // optional
-            method: 'GET', // optional
-            request: {
-                accept: '*/*'
-            },
-            response: {
-                'content-type': 'application/javascript',
-                'content-encoding': 'gzip'
-            }
-        }
-
         var helloJs = fs.readFileSync('./public/hello.js', "utf8")
-        res.push('/hello.js', options, function (err, stream) {
+        res.push('/hello.js', JS_OPTION, function (err, stream) {
             if (err) return;
             zlib.gzip(helloJs, function (err, buf) {
+                stream.end(buf);
+            })
+        });
+
+        var helloCss = fs.readFileSync('./public/hello.css', "utf8")
+        res.push('/hello.css', CSS_OPTION, function (err, stream) {
+            if (err) return;
+            zlib.gzip(helloCss, function (err, buf) {
                 stream.end(buf);
             })
         });
