@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>HTTP/1.1 与 HTTP/2 下载小文件速度对比</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            width: 900px;
+            margin: 0 auto;
+            padding-top: 50px;
+            height: 100%;
+        }
+
+        .section {
+            margin: 0 10px;
+            flex: 1;
+            height: 100%;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="section">
+        <iframe frameborder="0" width="100%" height="100%" scrolling="no" id="http11"
+                src="https://localhost:8001/http1.1"></iframe>
+    </div>
+    <div class="section">
+        <iframe frameborder="0" width="100%" height="100%" scrolling="no" id="http20"
+                src="https://localhost:8002/http2.0"></iframe>
+    </div>
+</div>
+</body>
+</html>

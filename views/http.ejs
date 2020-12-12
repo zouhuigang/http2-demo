@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>test http1.1</title>
+    <title><%= title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         html, body {
@@ -34,7 +34,7 @@
     </style>
 </head>
 <body>
-<div class="title">HTTP/1.1</div>
+<div class="title"><%= title %></div>
 <div class="timer">
     <p>
         Load time: <span id="loadTime"></span><span>s</span>
@@ -51,7 +51,7 @@
                 var img = new Image();
                 img.width = 34;
                 img.height = 34;
-                img.src = baseUrl + 'image_' + (i < 10 ? '0' + i : i) + '.jpg';
+                img.src = baseUrl + 'image_' + (i < 10 ? '0' + i : i) + '.jpg?t=' + new Date().getTime();
                 container.appendChild(img);
                 if (i % 10 === 0) {
                     container.appendChild(document.createElement('div'));

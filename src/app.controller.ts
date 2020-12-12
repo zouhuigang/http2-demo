@@ -74,9 +74,20 @@ export class AppController {
     }
 
 
+    @Get("differ")
+    public async differ(@Param() params, @Req() req: Request, @Res() res) {
+        return res.render('differ', {title: 'http1.1和http2.0对比测试'});
+    }
+
+
     @Get("http1.1")
     public async getHttp1(@Param() params, @Req() req: Request, @Res() res) {
-        return res.render('http1.1.ejs', {title: '演示服务器推送', message: '服务器推送了吗!'});
+        return res.render('http.ejs', {title: 'http1.1测试'});
+    }
+
+    @Get("http2.0")
+    public async getHttp2(@Param() params, @Req() req: Request, @Res() res) {
+        return res.render('http.ejs', {title: 'http2.0测试'});
     }
 
 
