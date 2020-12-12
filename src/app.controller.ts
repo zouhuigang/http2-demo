@@ -30,7 +30,6 @@ const CSS_OPTION = {
 }
 
 
-
 @Controller()
 export class AppController {
     constructor(private readonly appService: AppService) {
@@ -71,7 +70,13 @@ export class AppController {
         });
 
 
-        return res.render('index', {title: '演示服务器推送', message: '服务器推送了吗!'});
+        return res.render('index.pug', {title: '演示服务器推送', message: '服务器推送了吗!'});
+    }
+
+
+    @Get("http1.1")
+    public async getHttp1(@Param() params, @Req() req: Request, @Res() res) {
+        return res.render('http1.1.ejs', {title: '演示服务器推送', message: '服务器推送了吗!'});
     }
 
 

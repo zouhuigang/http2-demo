@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>test http1.1</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 350px;
+        }
+
+        img {
+            vertical-align: bottom;
+        }
+
+        .timer span {
+            color: #FF9933;
+            font-weight: bold;
+        }
+
+        .timer p {
+            margin: 5px;
+        }
+
+        .title {
+            text-align: center;
+            color: #09c;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="title">HTTP/1.1</div>
+<div class="timer">
+    <p>
+        Load time: <span id="loadTime"></span><span>s</span>
+    </p>
+</div>
+<div class="container" id="container">
+</div>
+<script>
+    (function () {
+        function load(baseUrl, container, done) {
+            var total = 180;
+            var curr = 0;
+            for (var i = 1; i <= total; i++) {
+                var img = new Image();
+                img.width = 34;
+                img.height = 34;
+                img.src = baseUrl + 'image_' + (i < 10 ? '0' + i : i) + '.jpg';
+                container.appendChild(img);
+                if (i % 10 === 0) {
+                    container.appendChild(document.createElement('div'));
+                }
+                img.onload = function () {
+                    imageLoadTime();
+                    curr++;
+                    if (curr === total) {
+                        done && done();
+                    }
+                };
+            }
+        }
+
+        function imageLoadTime() {
+            var lapsed = navSupport ? window.performance.now() : Date.now() - pageStart;
+            document.getElementById('loadTime').innerHTML = ((lapsed) / 1000).toFixed(2)
+        }
+
+        var pageStart = Date.now();
+
+        var navSupport = !(!('performance' in window)
+            || !('timing' in window.performance)
+            || !('navigation' in window.performance));
+
+        load('./images/ad/', document.getElementById('container'));
+        setTimeout(function () {
+            let timing = window.performance.timing;
+            let latency = timing.domContentLoadedEventEnd - timing.connectStart;
+            document.getElementById('latency').innerHTML = latency;
+
+        });
+    })();
+    document.querySelector('.title').addEventListener('click', function () {
+        location.reload();
+    });
+</script>
+</body>
+</html>
