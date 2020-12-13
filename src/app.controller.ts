@@ -3,6 +3,7 @@ import {AppService} from './app.service';
 import {Request, Response} from 'express';
 import * as zlib from 'zlib';
 import * as fs from 'fs';
+import {helper} from './helper';
 
 const JS_OPTION = {
     status: 200, // optional
@@ -70,6 +71,20 @@ export class AppController {
         });
 
 
+        let publicFiles = helper.getFiles('./public/images/bs/')
+
+        let imgResource = publicFiles.get('/img2.jpg')
+        res.push("/images/bs/img2.jpg", {response: imgResource.headers}, function (err, stream) {
+            if (err) return;
+            stream.end(fs.readFileSync(imgResource.fileDescriptor));
+            // zlib.gzip(fs.readFileSync(imgResource.fileDescriptor), function (err, buf) {
+            //     stream.end(buf);
+            // })
+        });
+
+        //图片的预加载
+        res.append('Link', ['</images/bs/img1.jpg>; rel=preload; as=image']);
+
         return res.render('index.pug', {title: '演示服务器推送', message: '服务器推送了吗!'});
     }
 
@@ -82,12 +97,36 @@ export class AppController {
 
     @Get("http1.1")
     public async getHttp1(@Param() params, @Req() req: Request, @Res() res) {
-        return res.render('http.ejs', {title: 'http1.1测试'});
+        return res.render('http.ejs', {title: 'http1.1测试', time: new Date().getTime()});
     }
 
     @Get("http2.0")
     public async getHttp2(@Param() params, @Req() req: Request, @Res() res) {
-        return res.render('http.ejs', {title: 'http2.0测试'});
+        return res.render('http.ejs', {title: 'http2.0测试', time: new Date().getTime()});
+    }
+
+    @Get("differ-push")
+    public async differPush(@Param() params, @Req() req: Request, @Res() res) {
+        return res.render('differ-push', {title: 'http1.1和http2.0推送对比测试'});
+    }
+
+    @Get("http2.0-push")
+    public async getHttp2Push(@Param() params, @Req() req: Request, @Res() res) {
+        let time = new Date().getTime();
+        let total = 180;
+        let publicFiles = helper.getFiles('./public/images/ad/')
+
+        for (let i = 1; i <= total; i++) {
+            let imgId = 'image_' + (i < 10 ? '0' + i : i) + '.jpg';
+
+            let imgResource = publicFiles.get('/' + imgId)
+            res.push("/images/ad/" + imgId + '?t=' + time, {response: imgResource.headers}, function (err, stream) {
+                if (err) return;
+                stream.end(fs.readFileSync(imgResource.fileDescriptor));
+            });
+        }
+
+        return res.render('http.ejs', {title: 'http2.0推送测试', 'time': time});
     }
 
 
